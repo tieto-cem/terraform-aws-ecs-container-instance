@@ -1,8 +1,10 @@
-#
+
+#---------------------------------------
 # IAM role for ECS container instances
-#
+#---------------------------------------
+
 resource "aws_iam_role" "ecs_container_instance_role" {
-  name               = "${var.name}-role"
+  name               = "${var.name}-container-instance-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -55,9 +57,9 @@ resource "aws_iam_role_policy_attachment" "ecs_managed_ec2_policy_attachment" {
 }
 
 
-#
-# EC2 instance profile
-#
+#-------------------------
+#  EC2 instance profile
+#-------------------------
 
 resource "aws_iam_instance_profile" "ecs_container_instance_profile" {
   name = "${var.name}-profile"
@@ -65,9 +67,9 @@ resource "aws_iam_instance_profile" "ecs_container_instance_profile" {
 }
 
 
-#
+#-------------------------
 # EC2 instance userdata
-#
+#-------------------------
 
 data "template_file" "userdata" {
   template = "${file("${path.module}/userdata.tpl")}"
@@ -78,9 +80,9 @@ data "template_file" "userdata" {
 }
 
 
-#
+#----------------------------------------------------------------------
 #  Featch latest ECS optimized ami details if ami id is not specified
-#
+#----------------------------------------------------------------------
 
 data "aws_ami" "ecs_ami" {
   count       = "${var.ecs_optimized_ami_id == "" ? 1 : 0}"
@@ -98,11 +100,12 @@ data "aws_ami" "ecs_ami" {
 }
 
 
-#
-#
-#
+#----------------------------
+#  Launch configuration
+#----------------------------
+
 resource "aws_launch_configuration" "ecs_container_instance_lc" {
-  name_prefix                 = "${var.name}-lc-"
+  name_prefix                 = "${var.name}-container-instance-lc-"
   # using splat syntax to fix eager evaluation of data reference
   image_id                    = "${var.ecs_optimized_ami_id == "" ? join("", data.aws_ami.ecs_ami.*.id) : var.ecs_optimized_ami_id}"
   instance_type               = "${var.instance_type}"
@@ -119,8 +122,12 @@ resource "aws_launch_configuration" "ecs_container_instance_lc" {
   }
 }
 
+
+#------------------
+#   ASG
+#------------------
 resource "aws_autoscaling_group" "ecs_container_instance_asg" {
-  name                 = "${var.name}-asg-${aws_launch_configuration.ecs_container_instance_lc.name}"
+  name                 = "${var.name}-container-instance-asg-${aws_launch_configuration.ecs_container_instance_lc.name}"
   launch_configuration = "${aws_launch_configuration.ecs_container_instance_lc.name}"
   min_size             = "${var.min_size}"
   max_size             = "${var.max_size}"
@@ -134,7 +141,7 @@ resource "aws_autoscaling_group" "ecs_container_instance_asg" {
 
   tag {
     key                 = "Name"
-    value               = "${var.name}-asg"
+    value               = "${var.name}-container-instance-asg"
     propagate_at_launch = "true"
   }
 }
