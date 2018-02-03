@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/tieto-cem/terraform-aws-ecs-container-instance.svg?style=shield&circle-token=ac9c8f6c689ae8b53f292f2847feb2feb92cc4b8)](https://circleci.com/gh/tieto-cem/terraform-aws-ecs-container-instance)
+
 AWS ECS Container Instance Terraform module
 ===========================================
 
