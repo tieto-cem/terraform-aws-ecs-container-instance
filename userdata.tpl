@@ -58,6 +58,15 @@ EOF
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
 #!/bin/bash
+# Get the current region from the instance metadata
+region=$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
+
+# Install the SSM agent RPM
+yum install -y https://amazon-ssm-$region.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm
+
+--==BOUNDARY==
+Content-Type: text/x-shellscript; charset="us-ascii"
+#!/bin/bash
 # Set the region to send CloudWatch Logs data to (the region where the container instance is located)
 region=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 sed -i -e "s/region = us-east-1/region = $region/g" /etc/awslogs/awscli.conf
