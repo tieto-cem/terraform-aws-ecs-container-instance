@@ -1,4 +1,4 @@
-variable "name_prefix" {
+variable "name" {
   description = "Name prefix to use in AWS resource names"
 }
 

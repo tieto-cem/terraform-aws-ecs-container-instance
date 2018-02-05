@@ -23,7 +23,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 
 module "cluster_instances" {
   source                = ".."
-  name_prefix           = "test"
+  name                  = "test"
   ecs_cluster_name      = "${aws_ecs_cluster.ecs_cluster.name}"
   lc_instance_type      = "t2.nano"
   lc_security_group_ids = ["sg-12345678"]
@@ -36,13 +36,13 @@ Resources
 
 This module creates following AWS resources:
 
-| Name                                        | Type                 | 
-|---------------------------------------------|----------------------|
-|${var.name_prefix}-container-instance-role   | IAM Role             | 
-|${var.name_prefix}-cloudwatch-logs-policy    | IAM Policy           | 
-|${var.name_prefix}-profile                   | EC2 Instance Profile |
-|${var.name_prefix}-container-instance-lc-    | Launch configuration |
-|${var.name_prefix}-container-instance-asg-   | ASG                  |
+| Name                                 | Type                 | 
+|--------------------------------------|----------------------|
+|${var.name}-container-instance-role   | IAM Role             | 
+|${var.name}-cloudwatch-logs-policy    | IAM Policy           | 
+|${var.name}-profile                   | EC2 Instance Profile |
+|${var.name}-container-instance-lc-    | Launch configuration |
+|${var.name}-container-instance-asg-   | ASG                  |
 
 Example
 -------

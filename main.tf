@@ -3,7 +3,7 @@
 #---------------------------------------
 
 resource "aws_iam_role" "instance_role" {
-  name               = "${var.name_prefix}-container-instance-role"
+  name               = "${var.name}-container-instance-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -22,7 +22,7 @@ EOF
 }
 
 resource "aws_iam_policy" "ecs_cloudwatch_logs_policy" {
-  name   = "${var.name_prefix}-cloudwatch-logs-policy"
+  name   = "${var.name}-cloudwatch-logs-policy"
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -64,7 +64,7 @@ resource "aws_iam_role_policy_attachment" "ec2_ssm_policy" {
 #-------------------------
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = "${var.name_prefix}-profile"
+  name = "${var.name}-profile"
   role = "${aws_iam_role.instance_role.id}"
 }
 
@@ -107,7 +107,7 @@ data "aws_ami" "ecs_ami" {
 #----------------------------
 
 resource "aws_launch_configuration" "lc" {
-  name_prefix                 = "${var.name_prefix}-container-instance-lc-"
+  name_prefix                 = "${var.name}-container-instance-lc-"
   # using splat syntax to fix eager evaluation of data reference
   image_id                    = "${var.lc_ecs_optimized_ami_id == "" ? join("", data.aws_ami.ecs_ami.*.id) : var.lc_ecs_optimized_ami_id}"
   instance_type               = "${var.lc_instance_type}"
@@ -129,7 +129,7 @@ resource "aws_launch_configuration" "lc" {
 #------------------
 
 resource "aws_autoscaling_group" "asg" {
-  name_prefix               = "${var.name_prefix}-container-instance-asg-"
+  name_prefix               = "${var.name}-container-instance-asg-"
   launch_configuration      = "${aws_launch_configuration.lc.name}"
   min_size                  = "${var.asg_min_size}"
   max_size                  = "${var.asg_max_size}"
@@ -144,7 +144,7 @@ resource "aws_autoscaling_group" "asg" {
 
   tag {
     key                 = "Name"
-    value               = "${var.name_prefix}-container-instance-asg"
+    value               = "${var.name}-container-instance-asg"
     propagate_at_launch = "true"
   }
 }

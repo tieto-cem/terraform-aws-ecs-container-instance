@@ -51,7 +51,7 @@ module "instance_sg" {
 
 module "cluster_nano_instances" {
   source                = ".."
-  name_prefix           = "test-nano"
+  name                  = "test-nano"
   ecs_cluster_name      = "${aws_ecs_cluster.ecs_cluster.name}"
   lc_instance_type      = "t2.nano"
   lc_security_group_ids = ["${module.instance_sg.id}"]
@@ -60,7 +60,7 @@ module "cluster_nano_instances" {
 
 module "cluster_micro_instances" {
   source                = ".."
-  name_prefix           = "test-micro"
+  name                  = "test-micro"
   ecs_cluster_name      = "${aws_ecs_cluster.ecs_cluster.name}"
   lc_instance_type      = "t2.micro"
   lc_security_group_ids = ["${module.instance_sg.id}"]
