@@ -107,7 +107,7 @@ data "aws_ami" "ecs_ami" {
 #----------------------------
 
 resource "aws_launch_configuration" "lc" {
-  name_prefix                 = "${var.name}-container-instance-lc-"
+  name_prefix                 = "${var.name}-lc-"
   # using splat syntax to fix eager evaluation of data reference
   image_id                    = "${var.lc_ecs_optimized_ami_id == "" ? join("", data.aws_ami.ecs_ami.*.id) : var.lc_ecs_optimized_ami_id}"
   instance_type               = "${var.lc_instance_type}"
@@ -129,14 +129,14 @@ resource "aws_launch_configuration" "lc" {
 #------------------
 
 resource "aws_autoscaling_group" "asg" {
-  name_prefix               = "${var.name}-container-instance-asg-"
-  launch_configuration      = "${aws_launch_configuration.lc.name}"
-  min_size                  = "${var.asg_min_size}"
-  max_size                  = "${var.asg_max_size}"
-  desired_capacity          = "${var.asg_desired_size}"
-  vpc_zone_identifier       = ["${var.asg_subnet_ids}"]
-  health_check_type         = "EC2"
-  default_cooldown          = "${var.asg_default_cooldown}"
+  name                 = "${var.name}-${aws_launch_configuration.lc.name}-asg"
+  launch_configuration = "${aws_launch_configuration.lc.name}"
+  min_size             = "${var.asg_min_size}"
+  max_size             = "${var.asg_max_size}"
+  desired_capacity     = "${var.asg_desired_size}"
+  vpc_zone_identifier  = ["${var.asg_subnet_ids}"]
+  health_check_type    = "EC2"
+  default_cooldown     = "${var.asg_default_cooldown}"
 
   lifecycle {
     create_before_destroy = true
