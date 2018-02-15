@@ -38,6 +38,12 @@ variable "lc_associate_public_ip_address" {
   default     = false
 }
 
+variable "lc_userdata" {
+  description = "The user data to provide when launching the instance. Default user data enables container metadata, SSM agent and installs CloudWatch Logs agent."
+  default = ""
+}
+
+
 #-------------------
 #  ASG settings
 #-------------------

@@ -113,7 +113,7 @@ resource "aws_launch_configuration" "lc" {
   instance_type               = "${var.lc_instance_type}"
   key_name                    = "${var.lc_key_pair_name}"
   security_groups             = ["${var.lc_security_group_ids}"]
-  user_data                   = "${data.template_file.userdata.rendered}"
+  user_data                   = "${var.lc_userdata == "" ? data.template_file.userdata.rendered : var.lc_userdata}"
   associate_public_ip_address = "${var.lc_associate_public_ip_address}"
   enable_monitoring           = true
   iam_instance_profile        = "${aws_iam_instance_profile.instance_profile.id}"
