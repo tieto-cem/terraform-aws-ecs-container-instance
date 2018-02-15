@@ -129,7 +129,7 @@ resource "aws_launch_configuration" "lc" {
 #------------------
 
 resource "aws_autoscaling_group" "asg" {
-  name                 = "${var.name}-${aws_launch_configuration.lc.id}-asg"
+  name                 = "${aws_launch_configuration.lc.id}-asg"
   launch_configuration = "${aws_launch_configuration.lc.name}"
   min_size             = "${var.asg_min_size}"
   max_size             = "${var.asg_max_size}"
@@ -144,7 +144,7 @@ resource "aws_autoscaling_group" "asg" {
 
   tag {
     key                 = "Name"
-    value               = "${var.name}-${aws_launch_configuration.lc.id}-asg"
+    value               = "${aws_launch_configuration.lc.id}-asg"
     propagate_at_launch = "true"
   }
 }
