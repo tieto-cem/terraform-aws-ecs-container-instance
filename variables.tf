@@ -58,10 +58,11 @@ variable "asg_max_size" {
   default     = 2
 }
 
-variable "asg_desired_size" {
-  description = "Desired size of container instances"
-  default     = 1
-}
+# Changing desired capacity will interfere with autoscaling
+#variable "asg_desired_size" {
+#  description = "Desired size of container instances"
+#  default     = 1
+#}
 
 variable "asg_subnet_ids" {
   type        = "list"
